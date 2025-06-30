@@ -1,0 +1,43 @@
+package src.classes.power_ups;
+
+import java.awt.Color;
+
+import src.classes.Game;
+import src.classes.Player;
+import src.lib.GameLib;
+
+public class MultipleProjectilesPowerUp extends PowerUp {
+    private double speed;
+    private double angle;
+    private double rotationSpeed;
+
+    public MultipleProjectilesPowerUp(double x, double y) {
+            super(x, y, 10, "multipleProjectiles");
+            speed = 0.10 + Math.random() * 0.15;
+            angle = (3 * Math.PI) / 2;
+            rotationSpeed = 0.0;
+    }
+    
+    @Override
+    public void update(long delta, Game game) {
+        y += speed * Math.sin(angle) * (-1.0) * delta;
+        x += speed * Math.cos(angle) * delta;
+        angle += rotationSpeed * delta;
+
+        if (y > GameLib.HEIGHT + 10) {
+            active = false;
+            return;
+        }
+    }
+
+    @Override
+    public void draw() {
+        GameLib.setColor(Color.MAGENTA);
+        GameLib.drawDiamond(x, y, radius);
+    }
+
+    @Override
+    public void efect(Player player) {
+        player.mutiplePorjectiles = true;
+    }
+}
