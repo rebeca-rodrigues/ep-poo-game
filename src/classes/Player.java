@@ -14,14 +14,16 @@ public class Player { //essa classe representa o jogador no jogo
     boolean active = true;
     boolean exploding = false;
     long explosionStart, explosionEnd;
+    double life;
 
     long nextShot = 0; 
     public boolean mutiplePorjectiles = false;
     public double velocity = 0.25;
 
-    public Player(double x, double y) {
+    public Player(double x, double y, double life) {
         this.x = x;
         this.y = y;
+        this.life = life;
     }
 
     public void update(long delta, Game game) {

@@ -1,16 +1,20 @@
 package src.classes;
 
+import src.lib.GameLib;
+import src.classes.config.Config;
 import src.classes.enemys.*;
 import src.classes.power_ups.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import src.lib.GameLib;
+
 
 public class Game { 
     //aqui eu crei as variáveis necessárias para o jogo
     //e criei o construtor do jogo, que inicializa os objetos principais
+    public Config config;
 
     public Player player; // o jogador
     List<Projectile> projectiles; //o que o jogador dispara
@@ -34,7 +38,13 @@ public class Game {
 
     public Game() {   // construtor do jogo
         GameLib.initGraphics();// isso é para iniciar o modo gráfico do jogo
-        player = new Player(GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90);// aqui eu criei o jogador na posição inicial
+        //Configuração do jogo
+        try {
+            config = new Config("src.fases.config.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        player = new Player(GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90, config.getVidaJogador());// aqui eu criei o jogador na posição inicial
         projectiles = new ArrayList<>(); // lista de projéteis do jogador
         enemies = new ArrayList<>(); // criei a lista de inimigos
         enemyProjectiles = new ArrayList<>(); //  lista de projéteis inimigos
