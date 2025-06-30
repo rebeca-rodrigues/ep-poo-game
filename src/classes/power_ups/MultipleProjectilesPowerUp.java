@@ -7,9 +7,9 @@ import src.classes.Player;
 import src.lib.GameLib;
 
 public class MultipleProjectilesPowerUp extends PowerUp {
-    private double speed;
+    private final double speed;
     private double angle;
-    private double rotationSpeed;
+    private final double rotationSpeed;
 
     public MultipleProjectilesPowerUp(double x, double y) {
             super(x, y, 10, "multipleProjectiles");
@@ -26,13 +26,12 @@ public class MultipleProjectilesPowerUp extends PowerUp {
 
         if (y > GameLib.HEIGHT + 10) {
             active = false;
-            return;
         }
     }
 
     @Override
     public void draw() {
-        GameLib.setColor(Color.MAGENTA);
+        GameLib.setColor(Color.PINK);
         GameLib.drawDiamond(x, y, radius);
     }
 

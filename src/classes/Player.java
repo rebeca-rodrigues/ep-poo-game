@@ -14,6 +14,7 @@ public class Player { //essa classe representa o jogador no jogo
     boolean active = true;
     boolean exploding = false;
     long explosionStart, explosionEnd;
+    double life = 100;
 
     long nextShot = 0; 
     public boolean mutiplePorjectiles = false;
@@ -27,8 +28,7 @@ public class Player { //essa classe representa o jogador no jogo
     public void update(long delta, Game game) {
         if (exploding) {
             if (System.currentTimeMillis() > explosionEnd) {
-                exploding = false;
-                active = true;
+                game.running = false; // termina o jogo quando a explosão acabar
             }
             return;
         }
@@ -71,19 +71,28 @@ public class Player { //essa classe representa o jogador no jogo
         } else {
             GameLib.setColor(Color.BLUE);
             GameLib.drawPlayer(x, y, radius);
+            GameLib.setColor(Color.RED);
+            GameLib.fillRect(x, y + 25, life, 1);
         }
     }
 
-    public void explode(long currentTime) {
-        active = false;
-        exploding = true;
-        explosionStart = currentTime;
-        explosionEnd = currentTime + 2000;
+    public void damage(long currentTime) {
+        if (!exploding && active) {
+            this.life -= 10;
+            if (this.life <= 0.0) {
+                this.life = 0.0;
+                active = false;
+                exploding = true;
+                explosionStart = currentTime;
+                explosionEnd = currentTime + 2000;
+            }
+        }
     }
 
     public boolean isActive() {
         return active && !exploding;
     }
+
 
     public boolean collidesWith(EnemyProjectile ep) {
         double dx = ep.x - this.x;

@@ -8,9 +8,9 @@ import src.lib.GameLib;
 
 public class VelocityPowerUp extends PowerUp {
 
-    private double speed;
+    private final double speed;
     private double angle;
-    private double rotationSpeed;
+    private final double rotationSpeed;
 
     public VelocityPowerUp(double x, double y) {
             super(x, y, 10, "velocity");
@@ -27,7 +27,6 @@ public class VelocityPowerUp extends PowerUp {
 
         if (y > GameLib.HEIGHT + 10) {
             active = false;
-            return;
         }
     }
 

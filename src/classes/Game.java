@@ -31,26 +31,26 @@ public class Game {
     long nextMultipleProjectilesPowerUpSpawn;
     long multipleProjectilesPowerUpduration;
 
+    public boolean running = true; // variável para controlar o loop do jogo
 
     public Game() {   // construtor do jogo
         GameLib.initGraphics();// isso é para iniciar o modo gráfico do jogo
-        player = new Player(GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90);// aqui eu criei o jogador na posição inicial
+        player = new Player(GameLib.WIDTH / 2.0, GameLib.HEIGHT * 0.90);// aqui eu criei o jogador na posição inicial
         projectiles = new ArrayList<>(); // lista de projéteis do jogador
         enemies = new ArrayList<>(); // criei a lista de inimigos
         enemyProjectiles = new ArrayList<>(); //  lista de projéteis inimigos
         powerUps = new ArrayList<>(); // criação da lista de power ups
 
         currentTime = System.currentTimeMillis(); //
-        nextEnemy1Spawn = currentTime + 2000;/// aqui eu controlei o tempo de spawn do inimigo do tipo 1
+        nextEnemy1Spawn = currentTime + 2000; // aqui eu controlei o tempo de spawn do inimigo do tipo 1
         nextEnemy2Spawn = currentTime + 7000; // "" so que do inimigo do tipo 2
 
         nextVelocityPowerUpSpawn = currentTime + 10000;
-        nextVelocityPowerUpSpawn = currentTime + 20000;
+        nextMultipleProjectilesPowerUpSpawn = currentTime + 20000;
     }
 
     public void run() {  // esse é o loop principal do jogo
         // Esse loop controla a execução do jogo, atualizando o estado e desenhando os objetos
-        boolean running = true; // variável para controlar o loop do jogo
 
         while (running) {
             long newTime = System.currentTimeMillis();
@@ -89,7 +89,8 @@ public class Game {
             // Colisões: player x projéteis inimigos
             for (EnemyProjectile ep : enemyProjectiles) {
                 if (player.isActive() && player.collidesWith(ep)) {
-                    player.explode(currentTime);
+                    player.damage(currentTime);
+                    ep.deactivate();
                 }
             }
 
