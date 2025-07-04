@@ -14,7 +14,7 @@ public class Player { //essa classe representa o jogador no jogo
     boolean active = true;
     boolean exploding = false;
     long explosionStart, explosionEnd;
-    double life = 100;
+    double life;
 
     long nextShot = 0; 
     public boolean mutiplePorjectiles = false;

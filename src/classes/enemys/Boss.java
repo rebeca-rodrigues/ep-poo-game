@@ -4,15 +4,15 @@ import java.awt.Color;
 import src.lib.GameLib;
 import src.classes.Game;
 
-// EnemyType1
-public class EnemyType1 extends Enemy {
+// Boss
+public class Boss extends Enemy {
 
     private double speed;
     private double angle;
     private double rotationSpeed;
     private long nextShoot;
 
-    public EnemyType1(double x, double y) {
+    public Boss(double x, double y) {
         super(x, y, 9.0);
         speed = 0.20 + Math.random() * 0.15;
         angle = (3 * Math.PI) / 2;
