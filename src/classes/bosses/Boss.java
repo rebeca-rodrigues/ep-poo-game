@@ -1,6 +1,9 @@
 package src.classes.bosses;
 
 import src.lib.GameLib;
+
+import java.awt.Color;
+
 import src.classes.Game;
 
 public abstract class Boss {
@@ -11,13 +14,14 @@ public abstract class Boss {
     protected boolean active = true;
     protected boolean exploding = false;
     protected long explosionStart, explosionEnd;
-
+    protected double finalY;
 
     public Boss(double life, double x, double y, double radius) {
         this.life = life;
         this.x = x;
-        this.y = y;
+        this.y = -80;
         this.radius = radius;
+        this.finalY = y;
     }
 
     public abstract void update(long delta, Game game);
@@ -40,6 +44,8 @@ public abstract class Boss {
             double alpha = (System.currentTimeMillis() - explosionStart) / (double) (explosionEnd - explosionStart);
             GameLib.drawExplosion(x, y, alpha);
         } else {
+            GameLib.setColor(Color.RED);
+            GameLib.fillRect(x+70, y - 30, this.life / 5, 10);
             drawBoss();
         }
     }

@@ -1,5 +1,6 @@
 package src.classes;
 
+import src.classes.bosses.BossProjectile;
 import src.classes.enemys.EnemyProjectile;
 import src.classes.power_ups.PowerUp;
 import src.lib.GameLib;
@@ -67,8 +68,7 @@ public class Player { //essa classe representa o jogador no jogo
 
     public void draw() { //desenha o jogador na tela
         if (exploding) {
-            double alpha = (System.currentTimeMillis() - explosionStart) / (double) (explosionEnd - explosionStart);
-            GameLib.drawExplosion(x, y, alpha);
+            GameLib.drawExplosion(x, y, 1);
         } else {
             GameLib.setColor(Color.BLUE);
             GameLib.drawPlayer(x, y, radius);
@@ -100,6 +100,13 @@ public class Player { //essa classe representa o jogador no jogo
         double dy = ep.y - this.y;
         double dist = Math.sqrt(dx * dx + dy * dy);
         return dist < (radius + ep.radius) * 0.8;
+    }
+
+    public boolean collidesWith(BossProjectile bp) {
+        double dx = bp.x - this.x;
+        double dy = bp.y - this.y;
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        return dist < (radius + bp.radius) * 0.8;
     }
 
     public boolean getPowerUp(PowerUp pu) {

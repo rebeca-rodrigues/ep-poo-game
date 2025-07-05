@@ -3,7 +3,6 @@ package src.classes.bosses;
 import src.lib.GameLib;
 import java.awt.Color;
 
-// Classe EnemyProjectile (projéteis inimigos)
 public class BossProjectile {
 
     public double x, y;

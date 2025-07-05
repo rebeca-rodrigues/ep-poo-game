@@ -58,7 +58,7 @@ public class EventoFactory {
         public boolean isDisparado() { return disparado; }
         public void setDisparado(boolean valor) { disparado = valor; }
 
-        public String getTipo() { return "INIMIGO"; }
+        public String getTipo() { return "CHEFE"; }
         public int getSubtipo() { return tipo; }
         public double getVida() {return vida;}
         public double getX() { return x; }
@@ -84,7 +84,6 @@ public class EventoFactory {
 
         public String getTipo() { return "POWERUP"; }
         public int getSubtipo() { return tipo; }
-        //public double getVida() {return 0;}
         public double getX() { return x; }
         public double getY() { return y; }
     }

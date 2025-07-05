@@ -22,23 +22,22 @@ public class Game {
     private List<Fase> fases;         // lista de fases completas, carregadas antecipadamente
     private int faseAtualIndex = 0; 
     private long tempoInicioFase;
-    Boss boss;
+    private Boss boss;
 
     List<Projectile> projectiles; //o que o jogador dispara
     List<Enemy> enemies;  // Lista de inimigos
     List<EnemyProjectile> enemyProjectiles; //o que os inimigos disparam
+    List<BossProjectile> bossProjectiles; //o que os inimigos disparam
     List<PowerUp> powerUps; // Lista de power ups
   
-
     long currentTime;   // tempo atual do jogo
-    // variáveis para controle de spawn de inimigos
 
     long nextVelocityPowerUpSpawn;
     long velocityPowerUpduration;
     long nextMultipleProjectilesPowerUpSpawn;
     long multipleProjectilesPowerUpduration;
 
-    public boolean running; // variável para controlar o loop das fases
+    public boolean running = true; // variável para controlar o loop das fases
 
     public Game() {   // construtor do jogo
 
@@ -68,11 +67,10 @@ public class Game {
         projectiles = new ArrayList<>(); // lista de projéteis do jogador
         enemies = new ArrayList<>();
         enemyProjectiles = new ArrayList<>();
+        bossProjectiles = new ArrayList<>();
         powerUps = new ArrayList<>(); // criação da lista de power ups
 
-        currentTime = System.currentTimeMillis(); //
-        //nextEnemy1Spawn = currentTime + 2000; // aqui eu controlei o tempo de spawn do inimigo do tipo 1
-        //nextEnemy2Spawn = currentTime + 7000; // "" so que do inimigo do tipo 2
+        currentTime = System.currentTimeMillis();
 
         nextVelocityPowerUpSpawn = currentTime + 10000;
         nextMultipleProjectilesPowerUpSpawn = currentTime + 20000;
@@ -82,29 +80,30 @@ public class Game {
     public void run() {  // esse é o loop principal do jogo
 
         for (faseAtualIndex = 0; faseAtualIndex < fases.size(); faseAtualIndex++) {
-            long newTime = System.currentTimeMillis();
-            currentTime = newTime;
-
             Fase faseAtual = fases.get(faseAtualIndex);
             System.out.println("Iniciando Fase " + (faseAtualIndex + 1));
 
-            running = true;
             rodarFase(faseAtual);
-
+            this.running = true;
+            player = new Player(GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90, config.getVidaJogador());// aqui eu criei o jogador na posição inicial
+            projectiles = new ArrayList<>(); // lista de projéteis do jogador
+            enemies = new ArrayList<>();
+            enemyProjectiles = new ArrayList<>();
+            bossProjectiles = new ArrayList<>();
+            powerUps = new ArrayList<>();
+            boss = null; 
+            
             if (!player.isActive()) faseAtualIndex--;
             else System.out.println("Parabéns! Você finalizou a fase " + (faseAtualIndex + 1));
         }
 
         System.out.println("Fim de jogo.");
         System.exit(0);
-
-
     }
 
     private void rodarFase(Fase fase) {
         List<Evento> eventos = fase.getEventos();
     
-        //boolean faseRodando = true;
         tempoInicioFase = System.currentTimeMillis();
     
         while (running) {
@@ -121,6 +120,7 @@ public class Game {
                     evento.setDisparado(true);
                 }
             }
+            removePowerUps();
 
             // Atualizações
             player.update(delta, this);
@@ -147,12 +147,28 @@ public class Game {
                 pu.update(delta, this);
                 if (!pu.isActive()) it.remove();
             }
+            
+            if (boss != null) boss.update(delta, this);
+
+            for (Iterator<BossProjectile> it = bossProjectiles.iterator(); it.hasNext();) {
+                BossProjectile ep = it.next();
+                ep.update(delta);
+                if (!ep.isActive()) it.remove();
+            }
 
             // Colisões: player x projéteis inimigos
             for (EnemyProjectile ep : enemyProjectiles) {
                 if (player.isActive() && player.collidesWith(ep)) {
                     player.damage(currentTime);
                     ep.deactivate();
+                }
+            }
+
+            // Colisões: player x projéteis inimigos
+            for (BossProjectile bp : bossProjectiles) {
+                if (player.isActive() && player.collidesWith(bp)) {
+                    player.damage(currentTime);
+                    bp.deactivate();
                 }
             }
 
@@ -163,6 +179,14 @@ public class Game {
                         e.explode(currentTime);
                         p.deactivate();
                     }
+                }
+            }
+
+            // Colisões: projéteis player x chefe
+            for (Projectile p : projectiles) {
+                if (p.isActive() && boss != null && boss.isActive() && p.collidesWith(boss)) {
+                    boss.damage(currentTime);
+                    p.deactivate();
                 }
             }
 
@@ -188,7 +212,8 @@ public class Game {
             for (Enemy e : enemies) e.draw();
             for (EnemyProjectile ep : enemyProjectiles) ep.draw();
             for (PowerUp pu : powerUps) pu.draw();
-
+            if (boss != null) {boss.draw();}
+            for (BossProjectile bp : bossProjectiles) bp.draw();
             if (GameLib.iskeyPressed(GameLib.KEY_ESCAPE)) {
                 running = false;
                 break;
@@ -228,15 +253,15 @@ public class Game {
 
     private void spawnPowerUps(Evento e) {
         if (e.getSubtipo() == 1) {
-            powerUps.add(new VelocityPowerUp(Math.random() * (GameLib.WIDTH - 20) + 30, -30));
+            powerUps.add(new VelocityPowerUp(e.getX(), e.getY()));
         }
 
         if (e.getSubtipo() == 2) {
-            powerUps.add(new MultipleProjectilesPowerUp(Math.random() * (GameLib.WIDTH - 20) + 30, -30));
+            powerUps.add(new MultipleProjectilesPowerUp(e.getX(), e.getY()));
         }
     }
 
-    private void spawnBoss (Evento e) { 
+    private void spawnBoss(Evento e) { 
         EventoChefe evento = (EventoChefe) e;         
         if (evento.getSubtipo() == 1) {
             boss = new BossType1(evento.getVida(), evento.getX(), evento.getY());
@@ -260,10 +285,22 @@ public class Game {
         enemyProjectiles.add(ep);
     }
 
+    public void addBossProjectile(BossProjectile bp) {
+        bossProjectiles.add(bp);
+    }
+
     private void busyWait(long time) {
         while (System.currentTimeMillis() < time) Thread.yield();
     }
     
+    private void removePowerUps() {
+        if (currentTime > velocityPowerUpduration) {
+            player.velocity = 0.25;
+        }
+        if (currentTime > multipleProjectilesPowerUpduration) {
+            player.mutiplePorjectiles = false;
+        }
+    }
 }    
 
 

@@ -1,5 +1,6 @@
 package src.classes;
 
+import src.classes.bosses.Boss;
 import src.classes.enemys.Enemy;
 import src.lib.GameLib;
 import java.awt.Color;
@@ -46,6 +47,13 @@ public class Projectile {
         double dy = e.getY() - y;
         double dist = Math.sqrt(dx * dx + dy * dy);
         return dist < e.getRadius();
+    }
+
+    public boolean collidesWith(Boss b) {
+        double dx = b.getX() + 80 - x;
+        double dy = b.getY() + 30 - y;
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        return dist < b.getRadius() * 6;
     }
 
     public void deactivate() {

@@ -131,13 +131,7 @@ public class GameLib {
 	}
 	
 	public static void drawExplosion(double x, double y, double alpha){
-
-		int p = 5;
-		int r = (int) (255 - Math.pow(alpha, p) * 255);
-		int g = (int) (128 - Math.pow(alpha, p) * 128);
-		int b = 0;
-
-		GameLib.setColor(new Color(r, g, b));
+		GameLib.setColor(Color.RED);
 		GameLib.drawCircle(x, y, alpha * alpha * 40);
 		GameLib.drawCircle(x, y, alpha * alpha * 40 + 1);
 	}
