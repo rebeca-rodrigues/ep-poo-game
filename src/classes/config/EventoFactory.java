@@ -1,24 +1,23 @@
 package src.classes.config;
 
-import src.classes.config.EventoFaseFactory.EventoFase;
-
 /**
  * Fábrica de eventos para fases do jogo.
  * Define a interface EventoFase e implementações concretas.
  */
-public class EventoFaseFactory {
+public class EventoFactory {
 
-    public interface EventoFase {
+    public interface Evento {
+        
         long getTempo();             // Quando o evento deve acontecer
         boolean isDisparado();
         void setDisparado(boolean valor);  // Marcar como executado
-        String getTipo();            // INIMIGO, POWERUP, etc.
+        String getTipo();            // INIMIGO, POWERUP, CHEFE
         int getSubtipo();            // Tipo específico (ex: inimigo 1 ou 2)
         double getX();
         double getY();
     }
 
-    public static class EventoInimigo implements EventoFase {
+    public static class EventoInimigo implements Evento {
         private int tipo;
         private long tempo;
         private double x, y;
@@ -34,21 +33,22 @@ public class EventoFaseFactory {
         public long getTempo() { return tempo; }
         public boolean isDisparado() { return disparado; }
         public void setDisparado(boolean valor) { disparado = valor; }
-
         public String getTipo() { return "INIMIGO"; }
         public int getSubtipo() { return tipo; }
         public double getX() { return x; }
         public double getY() { return y; }
     }
 
-    public static class EventoChefe implements EventoFase {
+    public static class EventoChefe implements Evento {
         private int tipo;
+        public double vida;
         private long tempo;
         private double x, y;
         private boolean disparado = false;
 
-        public EventoChefe(int tipo, long tempo, double x, double y) {
+        public EventoChefe(int tipo, double vida, long tempo, double x, double y) {
             this.tipo = tipo;
+            this.vida = vida;
             this.tempo = tempo;
             this.x = x;
             this.y = y;
@@ -60,11 +60,12 @@ public class EventoFaseFactory {
 
         public String getTipo() { return "INIMIGO"; }
         public int getSubtipo() { return tipo; }
+        public double getVida() {return vida;}
         public double getX() { return x; }
         public double getY() { return y; }
     }
 
-    public static class EventoPowerUp implements EventoFase {
+    public static class EventoPowerUp implements Evento {
         private int tipo;
         private long tempo;
         private double x, y;
@@ -81,13 +82,14 @@ public class EventoFaseFactory {
         public boolean isDisparado() { return disparado; }
         public void setDisparado(boolean valor) { disparado = valor; }
 
-        public String getTipo() { return "INIMIGO"; }
+        public String getTipo() { return "POWERUP"; }
         public int getSubtipo() { return tipo; }
+        //public double getVida() {return 0;}
         public double getX() { return x; }
         public double getY() { return y; }
     }
 
-    public static EventoFase criarEvento(String linha) {
+    public static Evento criarEvento(String linha) {
         String[] partes = linha.split(" ");
         switch (partes[0]) {
             case "INIMIGO":
@@ -102,7 +104,7 @@ public class EventoFaseFactory {
     
             case "POWERUP":
                 if (partes.length == 5) {
-                    int tipo = Integer.parseInt(partes[1]);// Ex: "velocity" ou "multipleProjectiles"
+                    int tipo = Integer.parseInt(partes[1]);
                     long tempo = Long.parseLong(partes[2]);
                     double x = Double.parseDouble(partes[3]);
                     double y = Double.parseDouble(partes[4]);
@@ -121,6 +123,7 @@ public class EventoFaseFactory {
                 }
                 break;
         }
+        return null;
     }
 }
 

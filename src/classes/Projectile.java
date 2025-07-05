@@ -6,7 +6,7 @@ import java.awt.Color;
 
 
 // Classe Projectile (projéteis do player)
-class Projectile {
+public class Projectile {
 
     double x, y;
     double vx, vy;

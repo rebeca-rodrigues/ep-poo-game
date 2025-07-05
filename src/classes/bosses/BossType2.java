@@ -1,20 +1,21 @@
-package src.classes.enemys;
+package src.classes.bosses;
 
 import java.awt.Color;
 import src.lib.GameLib;
 import src.classes.Game;
+import src.classes.enemys.EnemyProjectile;
 
-// Boss
-public class Boss extends Enemy {
+public class BossType2 extends Boss{
 
+    private double life;
     private double speed;
     private double angle;
     private double rotationSpeed;
     private long nextShoot;
 
-    public Boss(double x, double y) {
-        super(x, y, 9.0);
-        speed = 0.20 + Math.random() * 0.15;
+    public BossType2(double life, double x, double y) {
+        super(life, x, y, 15.00);
+        speed = 0.3;
         angle = (3 * Math.PI) / 2;
         rotationSpeed = 0.0;
         nextShoot = System.currentTimeMillis() + 500;
@@ -23,7 +24,9 @@ public class Boss extends Enemy {
     @Override
     public void update(long delta, Game game) {
         if (exploding) {
-            if (System.currentTimeMillis() > explosionEnd) active = false;
+            if (System.currentTimeMillis() > explosionEnd) {
+                game.running = false; // termina a fase
+            }
             return;
         }
 
@@ -48,8 +51,9 @@ public class Boss extends Enemy {
     }
 
     @Override
-    protected void drawEnemy() {
+    protected void drawBoss() {
         GameLib.setColor(Color.CYAN);
         GameLib.drawCircle(x, y, radius);
     }
+
 }

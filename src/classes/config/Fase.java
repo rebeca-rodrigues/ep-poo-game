@@ -5,7 +5,7 @@ import java.util.*;
 
 public class Fase {
 
-    private List<EventoFaseFactory.EventoFase> eventos;
+    private List<EventoFactory.Evento> eventos;
 
     public Fase(String caminhoArquivo) throws IOException {
         eventos = new ArrayList<>();
@@ -16,14 +16,14 @@ public class Fase {
         BufferedReader br = new BufferedReader(new FileReader(caminho));
         String linha;
         while ((linha = br.readLine()) != null) {
-            EventoFaseFactory.EventoFase evento = EventoFaseFactory.criarEvento(linha);
+            EventoFactory.Evento evento = EventoFactory.criarEvento(linha);
             if (evento != null)
                 eventos.add(evento);
         }
         br.close();
     }
 
-    public List<EventoFaseFactory.EventoFase> getEventos() {
+    public List<EventoFactory.Evento> getEventos() {
         return eventos;
     }
 }
