@@ -38,6 +38,6 @@ public class VelocityPowerUp extends PowerUp {
 
     @Override
     public void efect(Player player) {
-        player.velocity += 0.50;
+        player.velocity += 0.30;
     }
 }

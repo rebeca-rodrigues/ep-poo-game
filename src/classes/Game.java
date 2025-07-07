@@ -84,6 +84,12 @@ public class Game {
             System.out.println("Iniciando Fase " + (faseAtualIndex + 1));
 
             rodarFase(faseAtual);
+            if (!player.isActive()) {
+                List<Evento> eventos = faseAtual.getEventos();
+                for (Evento evento : eventos) evento.setDisparado(false);
+                faseAtualIndex--;
+            }
+            else System.out.println("Parabéns! Você finalizou a fase " + (faseAtualIndex + 1));
             this.running = true;
             player = new Player(GameLib.WIDTH / 2, GameLib.HEIGHT * 0.90, config.getVidaJogador());// aqui eu criei o jogador na posição inicial
             projectiles = new ArrayList<>(); // lista de projéteis do jogador
@@ -93,8 +99,8 @@ public class Game {
             powerUps = new ArrayList<>();
             boss = null; 
             
-            if (!player.isActive()) faseAtualIndex--;
-            else System.out.println("Parabéns! Você finalizou a fase " + (faseAtualIndex + 1));
+            
+            
         }
 
         System.out.println("Fim de jogo.");
@@ -215,8 +221,7 @@ public class Game {
             if (boss != null) {boss.draw();}
             for (BossProjectile bp : bossProjectiles) bp.draw();
             if (GameLib.iskeyPressed(GameLib.KEY_ESCAPE)) {
-                running = false;
-                break;
+                System.exit(0);
             }
     
             GameLib.display();
@@ -287,6 +292,18 @@ public class Game {
 
     public void addBossProjectile(BossProjectile bp) {
         bossProjectiles.add(bp);
+    }
+
+    public void addEnemyType2 (double x, double y) {
+        int enemy2Count = 0;
+        double distance = 23;
+        double angle = (3 * Math.PI) / 2;
+        while (enemy2Count < 10) {
+            enemies.add(new EnemyType2(x, y));
+            x += distance * Math.cos(angle);
+            y += distance * Math.sin(angle) * (-1.0);
+            enemy2Count++;
+        }
     }
 
     private void busyWait(long time) {

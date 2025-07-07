@@ -3,6 +3,7 @@ package src.classes.bosses;
 import java.awt.Color;
 import src.lib.GameLib;
 import src.classes.Game;
+//import src.classes.Projectile;
 
 public class BossType2 extends Boss{
 
@@ -48,18 +49,18 @@ public class BossType2 extends Boss{
         long now = System.currentTimeMillis();
 
         if (now > nextShoot) {
-            BossProjectile bp1 = new BossProjectile(x+133, y+90, vx, vy);
-            BossProjectile bp2 = new BossProjectile(x, y+90, vx, vy);
+            BossProjectile bp1 = new BossProjectile(x+70, (y + 6 * radius), 0.25, 1.0);
+            BossProjectile bp2 = new BossProjectile(x+70, (y + 6 * radius), -0.25, 1.0);
+            BossProjectile bp3 = new BossProjectile(x+70, (y + 6 * radius), 0, 1.0);
             game.addBossProjectile(bp1);
             game.addBossProjectile(bp2);
+            game.addBossProjectile(bp3);
             nextShoot = now + 300;
         }
         
         if (now > bigShoot) {
-            BossProjectile bigProjectile = new BossProjectile(x+65, y+90, vx, vy);
-            bigProjectile.radius = 60;
-            game.addBossProjectile(bigProjectile);
-            bigShoot = now + 5000;
+            game.addEnemyType2(x, y);
+            bigShoot = now + 6000;
         }
     }
 

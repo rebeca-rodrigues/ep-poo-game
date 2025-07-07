@@ -19,7 +19,7 @@ public class Player { //essa classe representa o jogador no jogo
 
     long nextShot = 0; 
     public boolean mutiplePorjectiles = false;
-    public double velocity = 0.25;
+    public double velocity = 0.30;
 
     public Player(double x, double y, double life) {
         this.x = x;
